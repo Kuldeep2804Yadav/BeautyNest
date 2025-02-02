@@ -19,7 +19,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = JSON.parse(localStorage.getItem("idToken"));
+    const storedToken = localStorage.getItem("idToken");
     if (storedToken) {
       dispatch(setIdToken(storedToken));
       navigate("/");
@@ -34,34 +34,45 @@ const Auth = () => {
   const formSubmitHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      let res;
-      if (!isLogin) {
-        res = await signUp({
-          email: authData?.email,
-          password: authData?.password,
+    if (!isLogin) {
+      try {
+        const res = await signUp({
+          name: authData.name,
+          email: authData.email,
+          password: authData.password,
         });
-      } else {
-        res = await login({
-          email: authData?.email,
-          password: authData?.password,
-        });
-      }
 
-      if (res?.data) {
-        dispatch(setIdToken(res.data.idToken));
-        localStorage.setItem("idToken", res.data.idToken);
-        dispatch(setAuthData({ email: "", password: "" }));
-        toast.success(
-          isLogin
-            ? "User logged in successfully!"
-            : "User signed up successfully!"
-        );
-        navigate("/");
+        if (res.data?.suucess) {
+          toast.success("Signup successfully");
+          setIsLogin(true);
+        } else {
+          toast.error(res?.error?.data?.message);
+        }
+      } catch (error) {
+        toast.error(error?.data?.message);
       }
-    } catch (error) {
-      console.error("Authentication Error:", error);
-      toast.error("Authentication failed. Please try again.");
+    } else {
+      try {
+        const res = await login({
+          email: authData.email,
+          password: authData.password,
+        });
+
+        if (res?.data?.success) {
+          toast.success("User Logged in Successfully");
+          localStorage.setItem("idToken", res?.data?.jwttoken);
+          localStorage.setItem(
+            "userDetails",
+            JSON.stringify({ name: res?.data?.name })
+          );
+          navigate("/");
+        } else if (res?.error) {
+          toast.error(
+            res?.error?.data?.message || "password or email is wrong"
+          );
+        } else {
+        }
+      } catch (error) {}
     }
   };
 

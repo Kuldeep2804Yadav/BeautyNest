@@ -5,17 +5,21 @@ const jwt = require("jsonwebtoken");
 const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = await UserModel.findOne({ email });
-    if (user) {
+
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
       return res.status(409).json({
-        message: "User is already exist you can login",
+        message: "User already exists, please log in",
         success: false,
       });
     }
-    const userModel = new UserModel({ name, email, password });
-    userModel.password = await bcrypt.hash(password, 10);
-    await userModel.save();
-    res.status(201).json({ message: "Sign Up successfully", status: true });
+
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new UserModel({ name, email, password: hashedPassword });
+
+    await newUser.save();
+    res.status(201).json({ message: "Sign up successful", success: true });
   } catch (err) {
     res.status(500).json({
       message: "Internal server error",
@@ -27,18 +31,19 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(409).json({
-        message: " auth failed  email or password is wrong",
+      return res.status(401).json({
+        message: "Auth failed: email or password is incorrect",
         success: false,
       });
     }
 
-    const isPassword = await bcrypt.compare(password, user.password);
-    if (!isPassword) {
-      return res.status(403).json({
-        message: " auth failed  email or password is wrong",
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Auth failed: email or password is incorrect",
         success: false,
       });
     }
@@ -54,11 +59,11 @@ const login = async (req, res) => {
       }
     );
 
-    res.status(201).json({
-      message: "User Logged in successfully",
-      status: true,
+    res.status(200).json({
+      message: "User logged in successfully",
+      success: true,
       jwttoken,
-      email,
+      email: user.email,
       name: user.name,
     });
   } catch (err) {

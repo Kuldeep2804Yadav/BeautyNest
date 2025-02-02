@@ -9,7 +9,7 @@ const authSlice = createSlice({
     authData: {
       email: "",
       password: "",
-      name : 'a'
+      name : ''
     },
     userIsLogin: !!idToken, 
   },
