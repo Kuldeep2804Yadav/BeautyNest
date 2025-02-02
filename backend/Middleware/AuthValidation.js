@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require("Joi");
 
   const signupvalidation = (req, res, next) => {
   const schema = Joi.object({
@@ -17,7 +17,7 @@ const Joi = require("joi");
 
 
   const loginvalidation = (req, res, next) => {
-    const schema = joi.object({
+    const schema = Joi.object({
       email: Joi.string().email().required(),
       password: Joi.string().min(5).max(100).required(),
     });
@@ -31,6 +31,7 @@ const Joi = require("joi");
 
 
   module.exports = {
-    signupvalidation
+    signupvalidation,
+    loginvalidation
   }
 
