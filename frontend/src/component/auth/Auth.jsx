@@ -19,7 +19,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("idToken");
+    const storedToken = JSON.parse(localStorage.getItem("idToken"));
     if (storedToken) {
       dispatch(setIdToken(storedToken));
       navigate("/");
@@ -80,7 +80,7 @@ const Auth = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-900 px-8">
       <div className="w-full max-w-lg bg-gray-800 p-8 rounded-lg shadow-lg transition-all duration-300">
         <h2 className="text-2xl font-bold text-center text-blue-400 mb-6">
-          {isLogin ? "LOGIN FORM" : "SIGNUP FORM"}
+          {isLogin ? "Login" : "Signup"}
         </h2>
 
         <form onSubmit={formSubmitHandler}>

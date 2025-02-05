@@ -1,4 +1,4 @@
-const Joi = require("Joi");
+const Joi =  require('joi')
 
   const signupvalidation = (req, res, next) => {
   const schema = Joi.object({

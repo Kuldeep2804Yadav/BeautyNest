@@ -14,7 +14,9 @@ const App = () => {
   return (
     <div>
       <div className="flex flex-col min-h-screen">
-        <Header />
+        <ProtectedRoute>
+          <Header />
+        </ProtectedRoute>
         <div className="flex-grow">
           <Routes>
             {/* Public Route */}
@@ -71,7 +73,9 @@ const App = () => {
             />
           </Routes>
         </div>
-        <Footer />
+        <ProtectedRoute>
+          <Footer />
+        </ProtectedRoute>
       </div>
     </div>
   );

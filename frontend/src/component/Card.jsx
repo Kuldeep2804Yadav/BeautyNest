@@ -6,48 +6,41 @@ const Card = ({ product }) => {
   };
 
   return (
-    <div className="flex-none h-96 w-80 text-black rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      {/* Product Image */}
+    <div className="flex-none h-96 w-80 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-200">
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-48 object-cover"
+        className="w-full h-48 object-cover rounded-t-2xl"
       />
 
-      {/* Product Details */}
-      <div className="p-4 ">
-        <h3 className="text-lg font-bold">{product.name}</h3>
+      <div className="p-4 flex flex-col justify-between h-48">
+        <h3 className="text-xl font-semibold text-gray-800 truncate">{product.name}</h3>
 
-        {/* Product Description */}
-        <p className="mt-2 text-sm opacity-80">
-          {truncateText(product.description, 80)}
+        <p className="mt-1 text-sm text-gray-600">
+          {truncateText(product.description, 60)}
         </p>
 
-        {/* Product Rating */}
         <div className="flex items-center mt-2">
           {[...Array(5)].map((_, index) => (
             <span
               key={index}
-              className={`text-yellow-400 ${
-                index < product.rating ? "fill-current" : "text-gray-300"
-              }`}
+              className={`${
+                index < product.rating ? "text-yellow-400" : "text-gray-300"
+              } text-lg`}
             >
               ★
             </span>
           ))}
         </div>
 
-        {/* Product Price */}
-        <div className="flex items-center justify-between">
-        <p className="font-semibold mt-2">${product.price}</p>
+        {/* Product Price & Add to Cart */}
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-lg font-bold text-gray-900">{product.price}</p>
 
-        {/* Add to Cart Button */}
-        <button className="mt-2 px-4 py-2 bg-pink-400 text-white rounded-lg hover:bg-pink-500 transition duration-300">
-          Add to Cart
-        </button>
-
+          <button className="px-4 py-2 bg-pink-500 text-white rounded-xl shadow-md hover:bg-pink-600 hover:shadow-lg transition duration-300">
+            Add to Cart
+          </button>
         </div>
-        
       </div>
     </div>
   );
