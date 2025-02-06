@@ -14,10 +14,12 @@ const Card = ({ product }) => {
       />
 
       <div className="p-4 flex flex-col justify-between h-48">
-        <h3 className="text-xl font-semibold text-gray-800 truncate">{product.name}</h3>
+        <h3 className="text-xl font-semibold text-gray-800 truncate">
+          {product.name}
+        </h3>
 
         <p className="mt-1 text-sm text-gray-600">
-          {truncateText(product.description, 60)}
+          {truncateText(product.description, 100)}
         </p>
 
         <div className="flex items-center mt-2">
@@ -33,9 +35,8 @@ const Card = ({ product }) => {
           ))}
         </div>
 
-        {/* Product Price & Add to Cart */}
         <div className="flex items-center justify-between mt-4">
-          <p className="text-lg font-bold text-gray-900">{product.price}</p>
+          <p className="text-lg font-bold text-gray-900">$ {product.price}</p>
 
           <button className="px-4 py-2 bg-pink-500 text-white rounded-xl shadow-md hover:bg-pink-600 hover:shadow-lg transition duration-300">
             Add to Cart
