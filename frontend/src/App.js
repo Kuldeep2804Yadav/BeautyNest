@@ -9,6 +9,7 @@ import Auth from "./component/auth/Auth";
 import ProtectedRoute from "./component/auth/ProtecedRoutes"; // Ensure it's correctly named
 import UserProfile from "./Pages/UserProfile";
 import Footer from "./component/Footer";
+import Cart from "./component/Cart";
 
 const App = () => {
   return (
@@ -60,6 +61,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Reviews />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
                 </ProtectedRoute>
               }
             />

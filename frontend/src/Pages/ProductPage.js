@@ -10,6 +10,7 @@ const ProductPage = () => {
     categoryName || "all"
   );
 
+
   const { data, isFetching, isLoading } = useGetProductsQuery(selectedCategory);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const ProductPage = () => {
           Collection
         </h3>
 
-        {selectedCategory === "all" && (
+        {categoryName === "all" && (
           <div className="mb-8">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-4">

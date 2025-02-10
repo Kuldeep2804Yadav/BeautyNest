@@ -19,7 +19,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = JSON.parse(localStorage.getItem("idToken"));
+    const storedToken = (localStorage.getItem("idToken"));
     if (storedToken) {
       dispatch(setIdToken(storedToken));
       navigate("/");

@@ -1,8 +1,16 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../store/Slices/cartSlice";
 
 const Card = ({ product }) => {
+  const dispatch = useDispatch();
+
   const truncateText = (text, limit) => {
     return text.length > limit ? `${text.slice(0, limit)}...` : text;
+  };
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(product));
   };
 
   return (
@@ -38,7 +46,10 @@ const Card = ({ product }) => {
         <div className="flex items-center justify-between mt-4">
           <p className="text-lg font-bold text-gray-900">$ {product.price}</p>
 
-          <button className="px-4 py-2 bg-pink-500 text-white rounded-xl shadow-md hover:bg-pink-600 hover:shadow-lg transition duration-300">
+          <button
+            onClick={handleAddToCart}
+            className="px-4 py-2 bg-pink-500 text-white rounded-xl shadow-md hover:bg-pink-600 hover:shadow-lg transition duration-300"
+          >
             Add to Cart
           </button>
         </div>

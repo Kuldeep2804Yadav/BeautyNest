@@ -1,43 +1,78 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const cartItemCount = cartItems.length;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
-    <header className="bg-gradient-to-r bg-pink-600 text-white shadow-lg sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-pink-600 via-pink-500 to-pink-400 text-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <div className="text-xl font-bold tracking-wide">
+        <div className="text-2xl font-bold tracking-wide">
           <NavLink to="/" className="hover:text-yellow-300 transition duration-200">
             Beauty Bliss
           </NavLink>
         </div>
 
-        {/* Search Bar */}
+        {/* Search Bar (Hidden on Mobile) */}
         <div className="hidden lg:flex flex-1 mx-6 relative">
           <input
             type="text"
             placeholder="Search for products..."
             className="w-full py-2 px-4 rounded-full text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-sm"
           />
-          <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
         </div>
 
         {/* Icons */}
-        <div className="flex items-center space-x-4">
-          <NavLink to="/cart" className="hover:text-yellow-300 transition duration-200">
+        <div className="flex items-center space-x-6">
+          {/* Cart Icon with Badge */}
+          <NavLink to="/cart" className="relative hover:text-yellow-300 transition duration-200">
             <ShoppingCart className="w-6 h-6" />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full px-2 py-1">
+                {cartItemCount}
+              </span>
+            )}
           </NavLink>
-          <NavLink to="/profile" className="hover:text-yellow-300 transition duration-200">
-            <User className="w-6 h-6" />
-          </NavLink>
+
+          {/* Profile Dropdown */}
+          <div className="relative">
+            <button onClick={() => setProfileMenuOpen(!profileMenuOpen)} className="focus:outline-none">
+              <User className="w-6 h-6" />
+            </button>
+
+            {profileMenuOpen && (
+              <div className="absolute right-0 mt-2 w-44 bg-white text-gray-700 shadow-lg rounded-lg py-2">
+                <NavLink
+                  to="/profile"
+                  className="block px-4 py-2 hover:bg-gray-100 transition rounded-t-lg"
+                  onClick={() => setProfileMenuOpen(false)}
+                >
+                  Account
+                </NavLink>
+                <button
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 transition rounded-b-lg"
+                  onClick={() => {
+                    setProfileMenuOpen(false);
+                    localStorage.removeItem("idToken");
+                    navigate("/auth");
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden focus:outline-none"
-          >
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden focus:outline-none">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -45,29 +80,15 @@ const Header = () => {
 
       {/* Mobile Search Bar & Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4 py-3 space-y-4">
+        <div className="lg:hidden bg-pink-500 text-white px-4 py-3 space-y-4">
           <div className="relative">
             <input
               type="text"
               placeholder="Search for products..."
               className="w-full py-2 px-4 rounded-full text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-sm"
             />
-            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
           </div>
-          {/* <NavLink
-            to="/cart"
-            className="block hover:text-yellow-300 transition duration-200"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Cart
-          </NavLink>
-          <NavLink
-            to="/profile"
-            className="block hover:text-yellow-300 transition duration-200"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Profile
-          </NavLink> */}
         </div>
       )}
     </header>
