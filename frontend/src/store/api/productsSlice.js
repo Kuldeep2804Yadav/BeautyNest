@@ -16,7 +16,14 @@ export const productSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    fetchsearchProduct: builder.query({
+      query : (search) => {
+        return {
+          url : `api/searchProducts?query=${search}`
+        }
+      }
+    })
   }),
 });
 
-export const { useGetProductsQuery , useGetTrendyProductsQuery} = productSlice;
+export const { useGetProductsQuery , useGetTrendyProductsQuery, useFetchsearchProductQuery} = productSlice;

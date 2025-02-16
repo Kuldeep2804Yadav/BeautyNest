@@ -10,6 +10,7 @@ import ProtectedRoute from "./component/auth/ProtecedRoutes"; // Ensure it's cor
 import UserProfile from "./Pages/UserProfile";
 import Footer from "./component/Footer";
 import Cart from "./component/Cart";
+import SearchPage from "./Pages/SearchPage";
 
 const App = () => {
   return (
@@ -53,6 +54,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <UserProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/search/:productName"
+              element={
+                <ProtectedRoute>
+                  <SearchPage />
                 </ProtectedRoute>
               }
             />

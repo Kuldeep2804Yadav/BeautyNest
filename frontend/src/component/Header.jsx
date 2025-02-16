@@ -8,7 +8,14 @@ const Header = () => {
   const cartItemCount = cartItems.length;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search/${searchQuery.trim()}`);
+    }
+  };
 
   return (
     <header className="bg-gradient-to-r from-pink-600 via-pink-500 to-pink-400 text-white shadow-md sticky top-0 z-50">
@@ -25,9 +32,14 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search for products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             className="w-full py-2 px-4 rounded-full text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-sm"
           />
-          <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+          <button onClick={handleSearch}>
+            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 cursor-pointer" />
+          </button>
         </div>
 
         {/* Icons */}
@@ -85,9 +97,14 @@ const Header = () => {
             <input
               type="text"
               placeholder="Search for products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="w-full py-2 px-4 rounded-full text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-sm"
             />
-            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+            <button onClick={handleSearch}>
+              <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 cursor-pointer" />
+            </button>
           </div>
         </div>
       )}

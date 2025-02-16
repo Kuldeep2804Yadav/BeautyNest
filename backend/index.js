@@ -42,6 +42,33 @@ app.get("/api/trendyProducts", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch category products" });
   }
 });
+
+
+app.get("/api/searchProducts", async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: "Search query is required" });
+  }
+
+ let products;
+  try {
+    if(query !== ''){
+       products = await Products.find({
+        name: { $regex: query, $options: "i" }, 
+      });
+    }else {
+       products = await Products.find();
+    }
+    
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error searching products:", error);
+    res.status(500).json({ error: "Failed to search products" });
+  }
+});
+
 app.use("/auth", AuthRouter);
 
 app.listen(PORT, () => {
