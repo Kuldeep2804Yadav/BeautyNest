@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Search, Menu, X } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -10,6 +10,12 @@ const Header = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  // Get user first letter from local storage or Redux store
+  const userDetails = localStorage.getItem("userDetails") || "Guest";
+
+ const {name} = JSON.parse(userDetails)
+  const userInitial = name.charAt(0).toUpperCase();
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -28,7 +34,7 @@ const Header = () => {
         </div>
 
         {/* Search Bar (Hidden on Mobile) */}
-        <div className="hidden lg:flex flex-1 mx-6 relative">
+        {name  && <div className="hidden lg:flex flex-1 mx-6 relative">
           <input
             type="text"
             placeholder="Search for products..."
@@ -40,7 +46,7 @@ const Header = () => {
           <button onClick={handleSearch}>
             <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 cursor-pointer" />
           </button>
-        </div>
+        </div> }
 
         {/* Icons */}
         <div className="flex items-center space-x-6">
@@ -56,8 +62,11 @@ const Header = () => {
 
           {/* Profile Dropdown */}
           <div className="relative">
-            <button onClick={() => setProfileMenuOpen(!profileMenuOpen)} className="focus:outline-none">
-              <User className="w-6 h-6" />
+            <button
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-yellow-500 text-gray-900 font-bold"
+            >
+              {userInitial}
             </button>
 
             {profileMenuOpen && (
@@ -91,7 +100,8 @@ const Header = () => {
       </div>
 
       {/* Mobile Search Bar & Menu */}
-      {mobileMenuOpen && (
+      {(mobileMenuOpen && name
+      ) && (
         <div className="lg:hidden bg-pink-500 text-white px-4 py-3 space-y-4">
           <div className="relative">
             <input

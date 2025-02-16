@@ -19,7 +19,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = (localStorage.getItem("idToken"));
+    const storedToken = localStorage.getItem("idToken");
     if (storedToken) {
       dispatch(setIdToken(storedToken));
       navigate("/");
@@ -63,7 +63,7 @@ const Auth = () => {
           localStorage.setItem("idToken", res?.data?.jwttoken);
           localStorage.setItem(
             "userDetails",
-            JSON.stringify({ name: res?.data?.name })
+            JSON.stringify({ name: res?.data?.name, email: res.data.email })
           );
           navigate("/");
         } else if (res?.error) {

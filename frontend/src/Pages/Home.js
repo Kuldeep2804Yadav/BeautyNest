@@ -25,7 +25,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#655356] text-gray-900">
+    <div className="min-h-screen bg-[#fff] text-gray-900">
       <HeroSection />
 
       <ProductCategory />
