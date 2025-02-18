@@ -2,13 +2,17 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart } from "../store/Slices/cartSlice";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
+  const CLIENT_ID = 'ASUvqcyLZ5Qsh7ZigLVhpjgdIq-BiN5aqsHSxZ388THveSYT6hLzk9nqaRgKchEXajXRSQNU1RQmQTws'
+  
+  console.log(CLIENT_ID)
 
   // Calculate total price
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
 
   return (
     <div className="container mx-auto p-6 min-h-screen bg-gray-100">
@@ -64,14 +68,39 @@ const Cart = () => {
             </div>
           ))}
 
-          {/* Cart Summary */}
+          {/* PayPal Payment */}
           <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-200 mt-6 text-center">
             <h3 className="text-2xl font-bold text-gray-800">🛍️ Cart Summary</h3>
             <p className="text-lg text-gray-600 mt-2">Total Items: <span className="font-bold">{cartItems.length}</span></p>
             <p className="text-2xl font-bold text-green-600 mt-2">Total Price: $ {totalPrice}</p>
-            <button className="mt-4 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition">
-              Proceed to Checkout
-            </button>
+
+            <PayPalScriptProvider options={{ "client-id": CLIENT_ID }}>
+              <PayPalButtons
+                style={{ layout: "vertical" }}
+                createOrder={async () => {
+                  const res = await fetch("http://localhost:8080/create-order", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ totalAmount: totalPrice }),
+                  });
+                  const data = await res.json();
+                  return data.orderID;
+                }}
+                onApprove={async (data) => {
+                  const res = await fetch("http://localhost:8080/capture-order", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ orderID: data.orderID }),
+                  });
+                  const captureData = await res.json();
+                  alert(`Payment successful! Transaction ID: ${captureData.capture.result.id}`);
+                }}
+              />
+            </PayPalScriptProvider>
           </div>
         </div>
       )}

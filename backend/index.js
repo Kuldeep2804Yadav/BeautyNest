@@ -4,6 +4,7 @@ const cors = require("cors");
 const AuthRouter = require("./Routes/AuthRouter");
 const  Products = require("./Models/cateoryProducts");
 const TrendyProducts = require('./Models/trendyProducts')
+const paypal = require('@paypal/checkout-server-sdk');
 const app = express();
 require("dotenv").config();
 require("./Models/db");
@@ -68,6 +69,59 @@ app.get("/api/searchProducts", async (req, res) => {
     res.status(500).json({ error: "Failed to search products" });
   }
 });
+
+
+
+
+//payment gateway
+
+const environment = new paypal.core.SandboxEnvironment(
+  process.env.PAYPAL_CLIENT_ID,
+  process.env.PAYPAL_SECRET
+);
+const client = new paypal.core.PayPalHttpClient(environment);
+
+// Create PayPal Order
+app.post("/create-order", async (req, res) => {
+  const { totalAmount } = req.body;
+
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.requestBody({
+    intent: "CAPTURE",
+    purchase_units: [
+      {
+        amount: {
+          currency_code: "USD",
+          value: totalAmount,
+        },
+      },
+    ],
+  });
+
+  try {
+    const order = await client.execute(request);
+    res.json({ orderID: order.result.id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Capture Payment
+app.post("/capture-order", async (req, res) => {
+  const { orderID } = req.body;
+
+  const request = new paypal.orders.OrdersCaptureRequest(orderID);
+  request.requestBody({});
+
+  try {
+    const capture = await client.execute(request);
+    res.json({ capture });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 app.use("/auth", AuthRouter);
 
