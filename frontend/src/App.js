@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import Home from "./Pages/Home";
@@ -14,87 +14,85 @@ import SearchPage from "./Pages/SearchPage";
 
 const App = () => {
   return (
-    <div>
-      <div className="flex flex-col min-h-screen">
-        <ProtectedRoute>
-          <Header />
-        </ProtectedRoute>
-        <div className="flex-grow">
-          <Routes>
-            {/* Public Route */}
-            <Route path="/auth" element={<Auth />} />
+    <div className="flex flex-col min-h-screen">
+      <ProtectedRoute>
+        <Header />
+      </ProtectedRoute>
+      <div className="flex-grow">
+        <Routes>
+          {/* Public Route */}
+          <Route path="/auth" element={<Auth />} />
 
-            {/* Protected Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <ProtectedRoute>
-                  <About />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/contact"
-              element={
-                <ProtectedRoute>
-                  <Contact />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <UserProfile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/search/:productName"
-              element={
-                <ProtectedRoute>
-                  <SearchPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/reviews"
-              element={
-                <ProtectedRoute>
-                  <Reviews />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <Cart />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/:categoryName"
-              element={
-                <ProtectedRoute>
-                  <ProductPage />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-        <ProtectedRoute>
-          <Footer />
-        </ProtectedRoute>
+          {/* Protected Routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <ProtectedRoute>
+                <About />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <ProtectedRoute>
+                <Contact />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search/:productName"
+            element={
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reviews"
+            element={
+              <ProtectedRoute>
+                <Reviews />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/:categoryName"
+            element={
+              <ProtectedRoute>
+                <ProductPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </div>
+      <ProtectedRoute>
+        <Footer />
+      </ProtectedRoute>
     </div>
   );
 };
