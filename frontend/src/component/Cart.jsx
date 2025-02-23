@@ -7,7 +7,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
-  const CLIENT_ID = 'ASUvqcyLZ5Qsh7ZigLVhpjgdIq-BiN5aqsHSxZ388THveSYT6hLzk9nqaRgKchEXajXRSQNU1RQmQTws'
+  const CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID
   
   console.log(CLIENT_ID)
 
@@ -78,7 +78,7 @@ const Cart = () => {
               <PayPalButtons
                 style={{ layout: "vertical" }}
                 createOrder={async () => {
-                  const res = await fetch("http://localhost:8080/create-order", {
+                  const res = await fetch(`${process.env.REACT_APP_PAYPAL_CLIENT_ID}/create-order`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const Cart = () => {
                   return data.orderID;
                 }}
                 onApprove={async (data) => {
-                  const res = await fetch("http://localhost:8080/capture-order", {
+                  const res = await fetch(`${process.env.REACT_APP_PAYPAL_CLIENT_ID}/capture-order`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
