@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const authData = useSelector(selectAuthData);
+  const authData = useSelector(selectAuthData) || {}; // Ensure authData is initialized
   const [signUp] = useSignUpMutation();
   const [login] = useLoginMutation();
   const dispatch = useDispatch();
@@ -42,14 +42,21 @@ const Auth = () => {
           password: authData.password,
         });
 
-        if (res.data?.suucess) {
-          toast.success("Signup successfully");
+        if (res?.data?.success) {
+          toast.success("Signup successful! Please log in.");
           setIsLogin(true);
+          dispatch(
+            setAuthData({
+              email: "",
+              password: "",
+              name: "",
+            })
+          );
         } else {
-          toast.error(res?.error?.data?.message);
+          toast.error(res?.error?.data?.message || "Signup failed");
         }
       } catch (error) {
-        toast.error(error?.data?.message);
+        toast.error(error?.response?.data?.message || "An error occurred");
       }
     } else {
       try {
@@ -59,20 +66,36 @@ const Auth = () => {
         });
 
         if (res?.data?.success) {
-          toast.success("User Logged in Successfully");
-          localStorage.setItem("idToken", res?.data?.jwttoken);
+          const token = res?.data?.jwttoken;
+
+          // Store token in localStorage
+          localStorage.setItem("idToken", token);
           localStorage.setItem(
             "userDetails",
-            JSON.stringify({ name: res?.data?.name, email: res.data.email })
+            JSON.stringify({ name: res?.data?.name, email: res?.data?.email })
           );
+          dispatch(
+            setAuthData({
+              email: "",
+              password: "",
+              name: "",
+            })
+          );
+
+          // Dispatch token to Redux for immediate update
+          dispatch(setIdToken(token));
+
+          // Show success toast
+          toast.success("User logged in successfully");
+
+          // Redirect immediately after setting Redux state
           navigate("/");
-        } else if (res?.error) {
-          toast.error(
-            res?.error?.data?.message || "password or email is wrong"
-          );
         } else {
+          toast.error(res?.error?.data?.message || "Invalid email or password");
         }
-      } catch (error) {}
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Login failed");
+      }
     }
   };
 
@@ -94,6 +117,7 @@ const Auth = () => {
                 value={authData.name || ""}
                 onChange={inputHandler}
                 className="w-full bg-gray-700 text-gray-200 py-2 pl-10 pr-3 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
           )}
@@ -107,6 +131,7 @@ const Auth = () => {
               value={authData.email || ""}
               onChange={inputHandler}
               className="w-full bg-gray-700 text-gray-200 py-2 pl-10 pr-3 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
 
@@ -119,6 +144,7 @@ const Auth = () => {
               value={authData.password || ""}
               onChange={inputHandler}
               className="w-full bg-gray-700 text-gray-200 py-2 pl-10 pr-3 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
 
@@ -136,7 +162,15 @@ const Auth = () => {
               Forgot password? or{" "}
               <span
                 className="text-blue-400 cursor-pointer"
-                onClick={() => setIsLogin(false)}
+                onClick={() => {
+                  dispatch(
+                    setAuthData({
+                      email: "",
+                      password: "",
+                      name: "",
+                    })
+                  );
+                  setIsLogin(false)}}
               >
                 Sign Up
               </span>
@@ -146,7 +180,16 @@ const Auth = () => {
               Already have an account?{" "}
               <span
                 className="text-blue-400 cursor-pointer"
-                onClick={() => setIsLogin(true)}
+                onClick={() => {
+                  dispatch(
+                    setAuthData({
+                      email: "",
+                      password: "",
+                      name: "",
+                    })
+                  );
+                  setIsLogin(true);
+                }}
               >
                 Sign In
               </span>

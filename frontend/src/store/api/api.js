@@ -10,7 +10,6 @@ export const apiSlice = createApi({
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
-      console.log(process.env.REACT_APP_BACKEND_URL)
 
       headers.set("Content-Type", "application/json");
       return headers;

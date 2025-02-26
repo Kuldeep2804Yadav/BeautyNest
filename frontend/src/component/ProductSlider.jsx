@@ -8,7 +8,6 @@ const ProductSlider = () => {
   const sliderRef = useRef(null);
 
   const { data, isFetching } = useGetTrendyProductsQuery();
-  console.log(data);
   const handleScroll = (direction) => {
     const slider = sliderRef.current;
     if (!slider) return;
@@ -41,7 +40,7 @@ const ProductSlider = () => {
             {data?.map((product) => (
               <>
                 {isFetching ? (
-                  <Shimmer />
+                  <Shimmer  key={product.id}/>
                 ) : (
                   <Card
                     key={product.id}

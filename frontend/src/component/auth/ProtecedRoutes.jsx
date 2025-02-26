@@ -5,6 +5,7 @@ import { userIsLogin } from "../../store/Slices/authSlice";
 
   const ProtectedRoute = ({ children }) => {
   const isLoggedIn = useSelector(userIsLogin); 
+//  const isLoggedIn= localStorage.getItem('idToken')
 
   if (!isLoggedIn) {
     return <Navigate to="/auth" replace />;

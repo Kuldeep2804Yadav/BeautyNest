@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import Home from "./Pages/Home";
@@ -6,93 +7,62 @@ import Reviews from "./Pages/Review";
 import Header from "./component/Header";
 import ProductPage from "./Pages/ProductPage";
 import Auth from "./component/auth/Auth";
-import ProtectedRoute from "./component/auth/ProtecedRoutes"; // Ensure it's correctly named
 import UserProfile from "./Pages/UserProfile";
 import Footer from "./component/Footer";
 import Cart from "./component/Cart";
 import SearchPage from "./Pages/SearchPage";
+import { userIsLogin } from "./store/Slices/authSlice";
 
 const App = () => {
+  const isAuthenticated =
+    useSelector(userIsLogin) || !!localStorage.getItem("idToken"); // Ensure it's a boolean
+console.log(isAuthenticated)
   return (
     <div className="flex flex-col min-h-screen">
-      <ProtectedRoute>
-        <Header />
-      </ProtectedRoute>
+      {isAuthenticated && <Header />}{" "}
       <div className="flex-grow">
         <Routes>
-          {/* Public Route */}
           <Route path="/auth" element={<Auth />} />
 
-          {/* Protected Routes */}
           <Route
             path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
+            element={isAuthenticated ? <Home /> : <Navigate to="/auth" />}
           />
           <Route
             path="/about"
-            element={
-              <ProtectedRoute>
-                <About />
-              </ProtectedRoute>
-            }
+            element={isAuthenticated ? <About /> : <Navigate to="/auth" />}
           />
           <Route
             path="/contact"
-            element={
-              <ProtectedRoute>
-                <Contact />
-              </ProtectedRoute>
-            }
+            element={isAuthenticated ? <Contact /> : <Navigate to="/auth" />}
           />
           <Route
             path="/profile"
             element={
-              <ProtectedRoute>
-                <UserProfile />
-              </ProtectedRoute>
+              isAuthenticated ? <UserProfile /> : <Navigate to="/auth" />
             }
           />
           <Route
             path="/search/:productName"
-            element={
-              <ProtectedRoute>
-                <SearchPage />
-              </ProtectedRoute>
-            }
+            element={isAuthenticated ? <SearchPage /> : <Navigate to="/auth" />}
           />
           <Route
             path="/reviews"
-            element={
-              <ProtectedRoute>
-                <Reviews />
-              </ProtectedRoute>
-            }
+            element={isAuthenticated ? <Reviews /> : <Navigate to="/auth" />}
           />
           <Route
             path="/cart"
-            element={
-              <ProtectedRoute>
-                <Cart />
-              </ProtectedRoute>
-            }
+            element={isAuthenticated ? <Cart /> : <Navigate to="/auth" />}
           />
           <Route
             path="/:categoryName"
             element={
-              <ProtectedRoute>
-                <ProductPage />
-              </ProtectedRoute>
+              isAuthenticated ? <ProductPage /> : <Navigate to="/auth" />
             }
           />
         </Routes>
       </div>
-      <ProtectedRoute>
-        <Footer />
-      </ProtectedRoute>
+      {isAuthenticated && <Footer />}{" "}
     </div>
   );
 };
