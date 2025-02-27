@@ -4,10 +4,12 @@ import { addToCart, removeFromCart } from "../store/Slices/cartSlice";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID;
 
   // Calculate total price
@@ -128,6 +130,7 @@ const Cart = () => {
                     `Payment successful! Transaction ID: ${captureData.capture.result.id}`
                   );
                   dispatch(addToCart([]));
+                  navigate("/");
                 }}
               />
             </PayPalScriptProvider>
