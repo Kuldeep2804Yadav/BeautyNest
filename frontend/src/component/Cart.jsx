@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart } from "../store/Slices/cartSlice";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
@@ -16,6 +16,10 @@ const Cart = () => {
   const totalPrice = cartItems
     .reduce((total, item) => total + item.price * item.quantity, 0)
     .toFixed(2);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <div className="container mx-auto p-6 min-h-screen bg-gray-100">
